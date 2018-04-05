@@ -3,6 +3,10 @@ secret.py
 *.json
 *.txt
 *.pyc
-Bot_Messages
+secrets/Bot_Messages
 .credentials
 Old
+temp_file*
+temp*
+tempfile*
+secrets/

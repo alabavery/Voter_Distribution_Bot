@@ -1,5 +1,5 @@
 import unittest.mock
-import new_email
+from modules import new_email
 
 
 class NewEmail__extract_sender(unittest.TestCase):
@@ -54,7 +54,7 @@ class NewEmail__extract_sender(unittest.TestCase):
 # 			                              'value': '...'},
 # 			                            { 'name': 'ARC-Authentication-Results',
 # 			                              'value': 'i=1; mx.google.com;       dkim=pass '
-# 			                                       'header.i=@yahoo.com header.s=s2048 '
+# 			                                       'header.i=@yahoo.com header.tests=s2048 '
 # 			                                       'header.b=AzRltT9S;       spf=pass '
 # 			                                       '(google.com: domain of '
 # 			                                       'brooklynzoe@yahoo.com designates '
@@ -83,7 +83,7 @@ class NewEmail__extract_sender(unittest.TestCase):
 # 			                                       'client-ip=74.6.135.124;'},
 # 			                            { 'name': 'Authentication-Results',
 # 			                              'value': 'mx.google.com;       dkim=pass '
-# 			                                       'header.i=@yahoo.com header.s=s2048 '
+# 			                                       'header.i=@yahoo.com header.tests=s2048 '
 # 			                                       'header.b=AzRltT9S;       spf=pass '
 # 			                                       '(google.com: domain of '
 # 			                                       'brooklynzoe@yahoo.com designates '
@@ -93,7 +93,7 @@ class NewEmail__extract_sender(unittest.TestCase):
 # 			                                       'dis=NONE) header.from=yahoo.com'},
 # 			                            { 'name': 'DKIM-Signature',
 # 			                              'value': 'v=1; a=rsa-sha256; c=relaxed/relaxed; '
-# 			                                       'd=yahoo.com; s=s2048; t=1514480752; '
+# 			                                       'd=yahoo.com; tests=s2048; t=1514480752; '
 # 			                                       'bh=ReOn8c/tCzXj6EJkpyEz8ql4wzKpkrubs7IarhmV9oc=; '
 # 			                                       'h=From:Date:Subject:References:In-Reply-To:To:From:Subject; '
 # 			                                       '...'},

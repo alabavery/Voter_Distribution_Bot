@@ -14,7 +14,7 @@ def get_unread_email_ids(gmail_client):
         return ids
     else:
         print("No unread messages...")
-        return [] # still return a list since that's what caller expects
+        return [] # still return a list since that'tests what caller expects
 
 
 def get_emails(client, email_ids):
@@ -58,7 +58,7 @@ def send_message(message, client):
     """Send an email message.
     Args:
     client: Authorized Gmail API service instance.
-    user_id: User's email address. The special value "me"
+    user_id: User'tests email address. The special value "me"
     can be used to indicate the authenticated user.
     message: Message to be sent.
     Returns:
@@ -66,10 +66,10 @@ def send_message(message, client):
     """
     # try:
     #     message = (client.users().messages().send(userId='me', body=message).execute())
-    #     print('Message Id: %s' % message['id'])
+    #     print('Message Id: %tests' % message['id'])
     #     return message
     # except errors.HttpError as error:
-    #     print('An error occurred: %s' % error)
+    #     print('An error occurred: %tests' % error)
     pass
 
 

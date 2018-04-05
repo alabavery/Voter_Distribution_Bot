@@ -1,5 +1,5 @@
 import unittest
-import data_handling
+from modules import data_handling
 
 
 class DataHandling__update_for_sent_voters(unittest.TestCase):

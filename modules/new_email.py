@@ -1,8 +1,7 @@
 import re
 
 import utils
-import secret
-
+from secrets import secret
 
 
 class EmailValueNotPresent(Exception):
@@ -86,7 +85,7 @@ class NewEmail:
         """
         We are going to use snippet as a proxy for message text.  However, in replies, the
         snippet can (always does?) contain some of the previous messages' text.  If that previous
-        message has a key phrase we are looking for in this one, that's a problem. But, these
+        message has a key phrase we are looking for in this one, that'tests a problem. But, these
         previous messages will be proceeded by a date header (e.g. 'On Tue, Jan 19 at 12:30).
         May God grant us the grace of making that heading always be there.
         :return: the part of the raw message snippet before the first date/time heading
@@ -102,7 +101,7 @@ class NewEmail:
 
     # def extract_text(self):
     #     """
-    #     Let's make assumption that the most recent message will always be in one of the following two positions:
+    #     Let'tests make assumption that the most recent message will always be in one of the following two positions:
     #     - message_data.get('payload').get('body').get('data')
     #     - message_data.get('payload').get('parts')[0].get('body').get('data')
     #     - if multiple messages seem to be included here, then all text preceding the first 'On Tue, Nov 28, 2017 at 7:48 PM'

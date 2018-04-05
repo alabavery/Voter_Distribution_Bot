@@ -21,7 +21,7 @@ class Gmail__get_all_unread(unittest.TestCase):
 
 	def test_third_party_replies(self):
 		pass
-		# this is situation where sender forwards to or cc's 3rd party and they
+		# this is situation where sender forwards to or cc'tests 3rd party and they
 		# send response at some point.  Not even sure what behavior should be here.
 
 class Gmail__mark_as_unread(unittest.TestCase):

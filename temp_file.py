@@ -1,9 +1,4 @@
 import json
-import config, secret
-import gmail_client
-import gmail_handling
-import new_email
-
 
 # client = gmail_client.get_gmail_client(config.CLIENT_SECRET_FILE_PATH, config.SCOPES, secret.APPLICATION_NAME)
 # # # ids = gmail_handling.get_unread_email_ids(client)

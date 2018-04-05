@@ -1,11 +1,12 @@
-import gmail_handling, data_handling, config, secret, utils
+import gmail_handling, data_handling, config, utils
+from secrets import secret
 
 
 def decide_what_to_do_with_email(newemail):
 	"""
 	:param newemail: a NewEmail object -- see new_email.py
 	:return: a tuple of (1) a function object, the handler to be used by by index.py (2) a bool describing
-	whether or not this this is an 'expected' situation, which actually just affects where it's logged
+	whether or not this this is an 'expected' situation, which actually just affects where it'tests logged
 	"""
 	if newemail.should_ignore:
 		handler = None
@@ -78,7 +79,7 @@ def send_voters_handler(newemail, seen_email_data, unused_voters, gmail_client):
 	# get voters
 	# combine
 	# send to newemail.sender using gmail_handling
-	# add voters to newemail.sender's entry (and create entry if necessary)
+	# add voters to newemail.sender'tests entry (and create entry if necessary)
 	# change/leave entry['active'] to 'y'
 	# delete voters
 	intro_message = config.BOT_MESSAGES['MESSAGE_WHEN_SENDING_VOTERS']

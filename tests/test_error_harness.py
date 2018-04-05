@@ -15,10 +15,10 @@ class TestErrorHarness(unittest.TestCase):
         int("not int-able")
 
     def dont_make_an_error(self):
-        return "here's the return"
+        return "here'tests the return"
 
     def dont_make_an_error_w_args(self, arg1, arg2):
-        return "here's the return"
+        return "here'tests the return"
 
     def setUp(self):
         self.seen_email_data = ['some seen email data']
@@ -33,7 +33,7 @@ class TestErrorHarness(unittest.TestCase):
     def test_multiple_args(self):
         found = index.error_harness(self.seen_email_data, self.unused_voters, self.ids_to_mark_read,
                                     self.dont_make_an_error_w_args, "arg1", "arg2")
-        self.assertEqual(found, "here's the return")
+        self.assertEqual(found, "here'tests the return")
 
     @unittest.mock.patch('index.file_io.write_json')
     @unittest.mock.patch('index.gmail_handling.mark_as_read')

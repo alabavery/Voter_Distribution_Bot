@@ -1,6 +1,7 @@
 import json
-import gmail_client, gmail_handling
-import config, secret
+from modules import gmail_client
+import config
+from secrets import secret
 
 
 def get_raw_message_by_id(message_id):
