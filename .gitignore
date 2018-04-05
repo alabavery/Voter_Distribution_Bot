@@ -1,0 +1,8 @@
+secret.py
+*.ipynb
+*.json
+*.txt
+*.pyc
+Bot_Messages
+.credentials
+Old
