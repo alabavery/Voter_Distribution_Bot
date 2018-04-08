@@ -22,7 +22,6 @@ def extract_part_of_snippet(email_id, sender, raw):
     if not snippet:
         raise EmailValueNotPresent('No snippet on email {0} from sender {1}'.format(email_id, sender))
 
-    # pattern = re.compile("On \D\D\D, \D\D\D \d+, \d\d\d\d at \d+:\d\d")
     # example 'On Apr 5, 2018, at 10:51 AM'
     pattern_with_no_weekday = re.compile("On [a-zA-Z]{3}\s\d{1,2},\s\d{4},\sat")
     found_pattern1_heading = pattern_with_no_weekday.search(snippet)
@@ -121,47 +120,6 @@ class NewEmail:
         if not parts:
             return False
         return len([part for part in parts if part['mimeType'] == 'image/jpeg']) > 0
-
-
-    # def extract_text(self):
-    #     """
-    #     Let'tests make assumption that the most recent message will always be in one of the following two positions:
-    #     - message_data.get('payload').get('body').get('data')
-    #     - message_data.get('payload').get('parts')[0].get('body').get('data')
-    #     - if multiple messages seem to be included here, then all text preceding the first 'On Tue, Nov 28, 2017 at 7:48 PM'
-    #
-    #     """
-    #     payload = self.raw.get('payload')
-    #
-    #     if payload.get('body').get('data'):
-    #         encoded_return = payload.get('body').get('data')
-    #     else:
-    #         # REALLY NEED TO MAKE SURE THIS IS ACTUALLY GETTING WHAT YOU WANT
-    #         encoded_return = self.recurse_message_data_for_text(payload)
-    #
-    #     if encoded_return == None:
-    #         print("No text area found for this email...")
-    #         encoded_return = ""
-    #
-    #     bytes_version = encoded_return.encode('ASCII')
-    #     different_bytes = base64.urlsafe_b64decode(bytes_version)
-    #     return different_bytes.decode()
-    #
-    #
-    # def recurse_message_data_for_text(self, raw_data):
-    #     if raw_data.get('body'):
-    #         if raw_data.get('body').get('data') != None:
-    #             return raw_data.get('body').get('data')
-    #         else:
-    #             parts = raw_data.get('parts')
-    #             if parts == None:
-    #                 return parts
-    #             for part in parts:
-    #                 found_text = self.recurse_message_data_for_text(part)
-    #
-    #                 if found_text != None:
-    #                     return found_text
-    #     return None
 
 
     def find_key_phrase(self, key_phrase):
