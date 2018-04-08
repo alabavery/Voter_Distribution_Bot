@@ -62,6 +62,21 @@ def find_email_substring(email_string):
     return False
 
 
+def find_key_phrase(text, key_phrase):
+    lower_text = text.lower()
+    lower_kp = key_phrase.lower()
+    found = False
+    if lower_kp in lower_text:
+        print("Found 1st:{0} in text: {1}".format(lower_kp, lower_text))
+        found = True
+    if lower_kp.replace(' ', '-') in lower_text:
+        print("Found 2nd:{0} in text: {1}".format(lower_kp.replace(' ', '-'), lower_text))
+        found = True
+    if lower_kp.replace(' ', '') in lower_text:
+        print("Found 3rd:{0} in text: {1}".format(lower_kp.replace(' ', ''), lower_text))
+        found = True
+    return found
+
 
 class NewEmail:
 
@@ -98,8 +113,8 @@ class NewEmail:
 
             self.attach = self.extract_attach()
             self.text = extract_part_of_snippet(self.email_id, self.sender, self.raw)
-            self.surrender = self.find_key_phrase(secret.SURRENDER_KEY_PHRASE)
-            self.asks_for_more = self.find_key_phrase(secret.ASK_FOR_MORE_KEY_PHRASE)
+            self.surrender = find_key_phrase(self.text, secret.SURRENDER_KEY_PHRASE)
+            self.asks_for_more = find_key_phrase(self.text, secret.ASK_FOR_MORE_KEY_PHRASE)
             self.from_seen = self.determine_if_seen(seen_email_data)
             self.from_active = self.is_from_active(seen_email_data)
 
@@ -120,22 +135,6 @@ class NewEmail:
         if not parts:
             return False
         return len([part for part in parts if part['mimeType'] == 'image/jpeg']) > 0
-
-
-    def find_key_phrase(self, key_phrase):
-        lower_text = self.text.lower()
-        lower_kp = key_phrase.lower()
-        found = False
-        if lower_kp in lower_text:
-            print("Found 1st:{0} in text: {1}".format(lower_kp, lower_text))
-            found = True
-        if lower_kp.replace(' ', '-') in lower_text:
-            print("Found 2nd:{0} in text: {1}".format(lower_kp.replace(' ', '-'), lower_text))
-            found = True
-        if lower_kp.replace(' ', '') in lower_text:
-            print("Found 3rd:{0} in text: {1}".format(lower_kp.replace(' ', ''), lower_text))
-            found = True
-        return found
 
 
     def determine_if_seen(self, seen_email_data):

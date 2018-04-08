@@ -4,6 +4,27 @@ import config
 from secrets import secret
 
 
+def convert_seen_data_old_to_new_format(old, new=None):
+	"""
+	Old format was [...{'email_address': str, 'active': str, 'sent_voter_addresses': [...str...]}...]
+	New format is {...actual email of volunteer: {'sender': a.e.o.v., 'voters': [...str...], 'active': str}...}
+	:param old: some old seen data
+	:param new: optionally you can add to an already existing new dataset
+	:return: dict()
+	"""
+	if not new:
+		new = dict()
+
+	for volunteer_entry in old:
+		new_entry = dict(
+			sender=volunteer_entry['email_address'],
+			voters=volunteer_entry['sent_voter_addresses'],
+			active=volunteer_entry['active']
+		)
+		new.update(new_entry)
+	return new
+
+
 def get_raw_message_by_id(message_id):
 	client = gmail_client.get_gmail_client(config.CLIENT_SECRET_FILE_PATH, config.SCOPES, secret.APPLICATION_NAME)
 	return client.users().messages().get(userId='me', id=message_id).execute()
