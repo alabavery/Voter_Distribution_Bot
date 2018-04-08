@@ -16,7 +16,7 @@ def get_credentials(client_secret_file_path, scopes, application_name):
     """
     #home_dir = os.path.expanduser('~')
     #credential_dir = os.path.join(home_dir, '.credentials')
-    credential_dir = ".credentials"
+    credential_dir = "secrets/.credentials"
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,

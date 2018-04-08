@@ -1,4 +1,5 @@
-import file_io, my_logging, gmail_handling, gmail_client, config
+from modules import file_io, my_logging, gmail_handling, gmail_client
+import config
 
 def error_harness(seen_email_data, unused_voters, ids_to_mark_read, fxn, *fxn_params):
 	"""

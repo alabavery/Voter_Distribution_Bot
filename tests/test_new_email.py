@@ -1,28 +1,83 @@
-import unittest.mock
-from modules import new_email
+import unittest
+from modules.new_email import extract_part_of_snippet, find_email_substring, EmailValueNotPresent
 
 
-class NewEmail__extract_sender(unittest.TestCase):
-	"""
-	def extract_sender(self):
-        headers = self.raw['payload']['headers']
-        return_path = [header for header in headers if header['name'].lower() == 'return-path']
-        if return_path:
-            sender = return_path[0]['value']
-        else:
-            sender = [header for header in headers if header['name'].lower() == 'from'][0]['value']
+"""
+MAY ALSO WANT TO TEST YOUR EMAIL EXPECTATIONS WITH REAL DATA! FOR INSTANCE, TEST THAT SNIPPET NEVER BEGINS WITH ON APR 5, 2018...
+"""
 
-        sender = self.find_email_substring(sender)
-        if sender:
-            return utils.reformat_email_address(sender)
-        else:
-            return None
-	"""
+
+class NewEmail__extract_part_of_snippet(unittest.TestCase):
+
 	def setUp(self):
+		self.basic_raw = dict(snippet='snippet')
+
+	def test_gets_snippet(self):
+		self.assertEqual('snippet', extract_part_of_snippet('', '', self.basic_raw))
+
+	def test_finds_heading_without_weekday(self):
+		raw = dict(snippet="Here is the text before On Apr 15, 2018, at 10:51 AM and here is the text after")
+		found = extract_part_of_snippet('', '', raw)
+		expected = "Here is the text before "
+		self.assertEqual(found, expected)
+
+	def test_finds_heading_with_weekday(self):
+		raw = dict(snippet="Here is the text before On Wed, Jul 5, 2018, at 10:51 AM and here is the text after")
+		found = extract_part_of_snippet('', '', raw)
+		expected = "Here is the text before "
+		self.assertEqual(found, expected)
+
+	def test_both_headings_present(self):
+		raw = dict(snippet="Here is the text before On Wed, Apr 15, 2018, at here's some more On May 5, 2018")
+		found = extract_part_of_snippet('', '', raw)
+		expected = "Here is the text before "
+		self.assertEqual(found, expected)
+
+	def test_both_headings_present2(self):
+		raw = dict(snippet="Here is the text before On Apr 5, 2018, at here's some more On Wed, Apr 5, 2018")
+		found = extract_part_of_snippet('', '', raw)
+		expected = "Here is the text before "
+		self.assertEqual(found, expected)
+
+	def test_raises_when_no_snippet(self):
+		raw = dict(not_snippet='something else')
+		with self.assertRaises(EmailValueNotPresent):
+			extract_part_of_snippet('', '', raw)
 
 
-	def test_b(self):
-		n = new_email.NewEmail()
+class NewEmail__find_email_substring(unittest.TestCase):
+
+	def test_true_positive(self):
+		sender_string = "email email email a@b"
+		found = find_email_substring(sender_string)
+		self.assertEqual("a@b", found)
+
+	def test_no_false_positive(self):
+		sender_string = "email email email"
+		found = find_email_substring(sender_string)
+		self.assertEqual(False, found)
+
+# class NewEmail__extract_sender(unittest.TestCase):
+# 	"""
+# 	def extract_sender(self):
+#         headers = self.raw['payload']['headers']
+#         return_path = [header for header in headers if header['name'].lower() == 'return-path']
+#         if return_path:
+#             sender = return_path[0]['value']
+#         else:
+#             sender = [header for header in headers if header['name'].lower() == 'from'][0]['value']
+#
+#         sender = self.find_email_substring(sender)
+#         if sender:
+#             return utils.reformat_email_address(sender)
+#         else:
+#             return None
+# 	"""
+# 	def setUp(self):
+#
+#
+# 	def test_b(self):
+# 		n = new_email.NewEmail()
 
 
 

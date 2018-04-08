@@ -1,4 +1,5 @@
-import gmail_handling, data_handling, config, utils
+from modules import gmail_handling, data_handling, utils
+import config
 from secrets import secret
 
 

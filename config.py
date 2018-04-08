@@ -1,8 +1,8 @@
 import os
 
-CLIENT_SECRET_FILE_PATH = "client_secret.json"
-SEEN_EMAIL_DATA_FILE_PATH = "seen_email_data.json"
-UNUSED_VOTERS_FILE_PATH = "unused_voters.json"
+CLIENT_SECRET_FILE_PATH = "secrets/client_secret.json"
+SEEN_EMAIL_DATA_FILE_PATH = "data/seen_email_data.json"
+UNUSED_VOTERS_FILE_PATH = "data/unused_voters.json"
 
 ERROR_LOG_FILE_PATH = "logs/error_log.txt"
 ROUTINE_ACTION_LOG_FILE_PATH = "logs/routine_log.txt"

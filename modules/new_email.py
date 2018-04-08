@@ -1,18 +1,82 @@
 import re
+import copy
 
-import utils
 from secrets import secret
+from modules import utils
 
 
 class EmailValueNotPresent(Exception):
     pass
 
+
+def extract_part_of_snippet(email_id, sender, raw):
+    """
+    We are going to use snippet as a proxy for message text.  However, in replies, the
+    snippet can (always does?) contain some of the previous messages' text.  If that previous
+    message has a key phrase we are looking for in this one, that'tests a problem. But, these
+    previous messages will be proceeded by a date header (e.g. 'On Tue, Jan 19 at 12:30).
+    May God grant us the grace of making that heading always be there.
+    :return: the part of the raw message snippet before the first date/time heading
+    """
+    snippet = raw.get('snippet')
+    if not snippet:
+        raise EmailValueNotPresent('No snippet on email {0} from sender {1}'.format(email_id, sender))
+
+    # pattern = re.compile("On \D\D\D, \D\D\D \d+, \d\d\d\d at \d+:\d\d")
+    # example 'On Apr 5, 2018, at 10:51 AM'
+    pattern_with_no_weekday = re.compile("On [a-zA-Z]{3}\s\d{1,2},\s\d{4},\sat")
+    found_pattern1_heading = pattern_with_no_weekday.search(snippet)
+    pattern_with_weekday = re.compile("On [a-zA-Z]{3},\s[a-zA-Z]{3}\s\d{1,2}")
+    found_pattern2_heading = pattern_with_weekday.search(snippet)
+
+    if found_pattern1_heading != None or found_pattern2_heading != None:
+        if found_pattern1_heading != None and found_pattern2_heading != None:
+            return snippet[:min(found_pattern1_heading.start(), found_pattern2_heading.start())]
+        if found_pattern1_heading != None:
+            return snippet[:found_pattern1_heading.start()]
+        if found_pattern2_heading != None:
+            return snippet[:found_pattern2_heading.start()]
+    else:
+        return snippet
+
+
+def extract_sender(raw):
+    headers = raw['payload']['headers']
+    return_path = [header for header in headers if header['name'].lower() == 'return-path']
+    if return_path:
+        sender = return_path[0]['value']
+    else:
+        sender = [header for header in headers if header['name'].lower() == 'from'][0]['value']
+
+    sender = find_email_substring(sender)
+    if sender:
+        return utils.reformat_email_address(sender)
+    else:
+        return None
+
+
+def find_email_substring(email_string):
+    substrings = email_string.split(' ')
+    email_substring = [ss for ss in substrings if '@' in ss]
+    if len(email_substring) == 1:
+        return email_substring[0]
+    return False
+
+
+
 class NewEmail:
+
+    def __str__(self):
+        d = copy.deepcopy(self.__dict__)
+        d['raw'] = 'Not gonna print raw...'
+        s = '\n\n' + '\n'.join(['{0}: {1}'.format(key, val) for key, val in list(d.items())])
+        return s
+
 
     def main(self, email_id, raw_email_datum, seen_email_data):
         self.email_id = email_id
         self.raw = raw_email_datum
-        self.sender = self.extract_sender()
+        self.sender = extract_sender(raw_email_datum)
         if not self.sender:
             raise EmailValueNotPresent("No sender on message {0}".format(email_id))
 
@@ -34,7 +98,7 @@ class NewEmail:
                 self.subject = ""
 
             self.attach = self.extract_attach()
-            self.text = self.extract_part_of_snippet()
+            self.text = extract_part_of_snippet(self.email_id, self.sender, self.raw)
             self.surrender = self.find_key_phrase(secret.SURRENDER_KEY_PHRASE)
             self.asks_for_more = self.find_key_phrase(secret.ASK_FOR_MORE_KEY_PHRASE)
             self.from_seen = self.determine_if_seen(seen_email_data)
@@ -48,31 +112,9 @@ class NewEmail:
             return None
 
 
-    def find_email_substring(self, email_string):
-        substrings = email_string.split(' ')
-        email_substring = [ss for ss in substrings if '@' in ss]
-        if len(email_substring) == 1:
-            return email_substring[0]
-        return False
-
-
     def should_we_ignore(self):
         return (self.sender == secret.THE_EMAIL) or ('google' in self.sender)
 
-
-    def extract_sender(self):
-        headers = self.raw['payload']['headers']
-        return_path = [header for header in headers if header['name'].lower() == 'return-path']
-        if return_path:
-            sender = return_path[0]['value']
-        else:
-            sender = [header for header in headers if header['name'].lower() == 'from'][0]['value']
-
-        sender = self.find_email_substring(sender)
-        if sender:
-            return utils.reformat_email_address(sender)
-        else:
-            return None
 
     def extract_attach(self):
         parts = self.raw['payload'].get('parts')
@@ -80,24 +122,6 @@ class NewEmail:
             return False
         return len([part for part in parts if part['mimeType'] == 'image/jpeg']) > 0
 
-
-    def extract_part_of_snippet(self):
-        """
-        We are going to use snippet as a proxy for message text.  However, in replies, the
-        snippet can (always does?) contain some of the previous messages' text.  If that previous
-        message has a key phrase we are looking for in this one, that'tests a problem. But, these
-        previous messages will be proceeded by a date header (e.g. 'On Tue, Jan 19 at 12:30).
-        May God grant us the grace of making that heading always be there.
-        :return: the part of the raw message snippet before the first date/time heading
-        """
-        snippet = self.raw['snippet']
-        pattern = re.compile("On \D\D\D, \D\D\D \d+, \d\d\d\d at \d+:\d\d")
-        found_date_heading_at = pattern.search(snippet)
-
-        if found_date_heading_at != None:
-            return snippet[:found_date_heading_at.start()]
-        else:
-            return snippet
 
     # def extract_text(self):
     #     """

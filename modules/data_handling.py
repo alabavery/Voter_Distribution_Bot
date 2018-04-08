@@ -1,4 +1,4 @@
-import utils
+from modules import utils
 
 class MyDataHandlingError(Exception):
 	pass
