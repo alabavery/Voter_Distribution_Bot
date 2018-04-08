@@ -1,5 +1,5 @@
 import json
-from modules import gmail_client
+from modules import gmail_client, utils
 import config
 from secrets import secret
 
@@ -16,12 +16,16 @@ def convert_seen_data_old_to_new_format(old, new=None):
 		new = dict()
 
 	for volunteer_entry in old:
+		reformatted_email = utils.reformat_email_address(volunteer_entry['email_address'])
 		new_entry = dict(
-			sender=volunteer_entry['email_address'],
+			sender=reformatted_email,
 			voters=volunteer_entry['sent_voter_addresses'],
 			active=volunteer_entry['active']
 		)
-		new.update(new_entry)
+		if new.get(reformatted_email):
+			new[reformatted_email].update(new_entry)
+		else:
+			new[reformatted_email] = new_entry
 	return new
 
 
@@ -32,7 +36,7 @@ def get_raw_message_by_id(message_id):
 
 def check_if_seen(email):
 	email = email.replace('<','').replace('>','')
-	with open('seen_email_data.json', 'r') as f:
+	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'r') as f:
 		data = json.loads(f.read())
 	record_indices = [i for i, record in enumerate(data) if record['email_address'] == '<' + email + '>']
 	if len(record_indices) > 0:
@@ -58,7 +62,7 @@ def run_it(email, num=10, existing=True):
 
 
 def get_some(num=10):
-	with open('unused_addresses.json', 'r') as f:
+	with open(config.UNUSED_VOTERS_FILE_PATH, 'r') as f:
 		all_addresses = json.loads(f.read())
 		return all_addresses[:num]
 
@@ -66,32 +70,32 @@ def get_some(num=10):
 def del_some(num=10):
 	sure = input("Sure?")
 	if sure.lower() == 'y':
-		with open('unused_addresses.json', 'r') as f:
+		with open(config.UNUSED_VOTERS_FILE_PATH, 'r') as f:
 			all_addresses = json.loads(f.read())
 		del all_addresses[:num]
 
-		with open('unused_addresses.json', 'w') as f:
+		with open(config.UNUSED_VOTERS_FILE_PATH, 'w') as f:
 			f.write(json.dumps(all_addresses))
 	else:
 		print("Didn't do anything.")
 
 def add_to_existing_record(email, addresses):
 	email = email.replace('<','').replace('>','')
-	with open('seen_email_data.json', 'r') as f:
+	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'r') as f:
 		data = json.loads(f.read())
 	record_index = [i for i, record in enumerate(data) if record['email_address'] == '<' + email + '>']
 	record_index = record_index[0]
 	data[record_index]['sent_voter_addresses'].append(addresses)
 	
-	with open('seen_email_data.json', 'w') as f:
+	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'w') as f:
 		f.write(json.dumps(data))
 
 def add_new_record(email, addresses):
 	email = email.replace('<','').replace('>','')
 	record = {'sent_voter_addresses':addresses, 'active': 'y', 'email_address':'<'+email+'>'}
 
-	with open('seen_email_data.json', 'r') as f:
+	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'r') as f:
 		data = json.loads(f.read())
 		data.append(record)
-	with open('seen_email_data.json', 'w') as f:
+	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'w') as f:
 		f.write(json.dumps(data))

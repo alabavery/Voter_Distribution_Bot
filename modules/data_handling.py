@@ -25,6 +25,8 @@ def mark_existing_entry_inactive(sender, seen_email_data):
 
 
 def add_voters_to_entry(voters_to_add, entry):
+	print("Adding to entry: {0}".format(voters_to_add))
+
 	for voter in voters_to_add:
 		if voter in entry['voters']:
 			msg = "Already added voter '{0}' to entry for {1}".format(voter, entry['sender'])

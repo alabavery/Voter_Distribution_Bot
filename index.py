@@ -1,6 +1,6 @@
 import config
 from secrets import secret
-from modules import gmail_client, file_io, gmail_handling, new_email, error_harness, core_logic
+from modules import gmail_client, file_io, gmail_handling, new_email, error_harness, core_logic, my_logging
 error_harness = error_harness.error_harness
 
 import pprint
@@ -35,25 +35,34 @@ if __name__ == '__main__':
 		handler, is_expected = error_harness(
 			seen_email_data, unused_voters, ids_to_mark_read, core_logic.decide_what_to_do_with_email, newemail
 		)
-    #
-	# 	# USE HANDLER
-	# 	if handler != None:
-	# 		seen_email_data, unused_voters = error_harness(
-	# 			seen_email_data,
-	# 			unused_voters,
-	# 			ids_to_mark_read,
-	# 			handler,
-	# 			newemail, seen_email_data, unused_voters, gmail_client # the params used by all handlers
-	# 		)
-	# 		# LOG USE OF HANDLER
-	# 		my_logging.log(handler, is_expected, newemail)
-    #
-	# 	else:
-	# 		# ALSO LOG IF WE IGNORED AN EMAIL
-	# 		my_logging.log(handler, is_expected, newemail)
-    #
-	# 	# OK TO QUEUE UP TO MARK AS READ NOW
-	# 	ids_to_mark_read.append(email_id)
+
+
+		# USE HANDLER
+		if handler != None:
+			seen_email_data, unused_voters = error_harness(
+				seen_email_data,
+				unused_voters,
+				ids_to_mark_read,
+				handler,
+				newemail, seen_email_data, unused_voters, gmail_client # the params used by all handlers
+			)
+			# LOG USE OF HANDLER
+			my_logging.log(handler, is_expected, newemail)
+
+		else:
+			# ALSO LOG IF WE IGNORED AN EMAIL
+			my_logging.log(handler, is_expected, newemail)
+
+		# OK TO QUEUE UP TO MARK AS READ NOW
+		ids_to_mark_read.append(email_id)
+
+		print("\n\n")
+		print(newemail)
+		print("\nUsing handler {0} (but not actually sending email)".format(handler))
+
+		cont = input("Go to next one?")
+		while cont != 'y':
+			cont = input("Go to next one?")
     #
 	# # SAVE THE DATA
 	# file_io.write_json(seen_email_data, config.SEEN_EMAIL_DATA_FILE_PATH)

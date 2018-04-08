@@ -64,7 +64,7 @@ def send_message(message, client):
     Returns:
     Sent Message.
     """
-    # try:
+    # try: TODO uncomment this function
     #     message = (client.users().messages().send(userId='me', body=message).execute())
     #     print('Message Id: %tests' % message['id'])
     #     return message

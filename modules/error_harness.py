@@ -20,8 +20,8 @@ def error_harness(seen_email_data, unused_voters, ids_to_mark_read, fxn, *fxn_pa
 		return fxn(*fxn_params)
 	except Exception as e:
 		# file_io should never fail, so no need for try/except here
-		file_io.write_json(seen_email_data, config.SEEN_EMAIL_DATA_FILE_PATH)
-		file_io.write_json(unused_voters, config.UNUSED_VOTERS_FILE_PATH)
+		# file_io.write_json(seen_email_data, config.SEEN_EMAIL_DATA_FILE_PATH) TODO uncomment
+		# file_io.write_json(unused_voters, config.UNUSED_VOTERS_FILE_PATH) TODO uncomment
 		# log should never fail, so no need for try/except here
 		my_logging.error_log(fxn, fxn_params, e)
 
