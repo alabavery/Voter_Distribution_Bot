@@ -1,5 +1,5 @@
 import json
-from modules import gmail_client, utils
+from modules import gmail_client, utils, data_handling
 import config
 from secrets import secret
 
@@ -35,21 +35,16 @@ def get_raw_message_by_id(message_id):
 
 
 def check_if_seen(email):
-	email = email.replace('<','').replace('>','')
+	email = utils.reformat_email_address(email)
 	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'r') as f:
 		data = json.loads(f.read())
-	record_indices = [i for i, record in enumerate(data) if record['email_address'] == '<' + email + '>']
-	if len(record_indices) > 0:
-		return [data[record_index] for record_index in record_indices]
-	else:
-		return False
+	return data.get(email)
 
 
 def run_it(email, num=10, existing=True):
 	adds = get_some(num)
 	assert len(adds) == num
 	assert type(adds[0]) == str
-	#assert num < 150
 
 	if existing:
 		add_to_existing_record(email, adds)
@@ -79,23 +74,17 @@ def del_some(num=10):
 	else:
 		print("Didn't do anything.")
 
+
 def add_to_existing_record(email, addresses):
-	email = email.replace('<','').replace('>','')
+	email = utils.reformat_email_address(email)
 	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'r') as f:
-		data = json.loads(f.read())
-	record_index = [i for i, record in enumerate(data) if record['email_address'] == '<' + email + '>']
-	record_index = record_index[0]
-	data[record_index]['sent_voter_addresses'].append(addresses)
-	
-	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'w') as f:
-		f.write(json.dumps(data))
+		seen_email_data = json.loads(f.read())
+	data_handling.update_for_sent_voters(email, addresses, seen_email_data)
+
 
 def add_new_record(email, addresses):
-	email = email.replace('<','').replace('>','')
-	record = {'sent_voter_addresses':addresses, 'active': 'y', 'email_address':'<'+email+'>'}
-
+	email = utils.reformat_email_address(email)
 	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'r') as f:
-		data = json.loads(f.read())
-		data.append(record)
-	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'w') as f:
-		f.write(json.dumps(data))
+		seen_email_data = json.loads(f.read())
+
+	add_entry(email, addresses, seen_email_data)
