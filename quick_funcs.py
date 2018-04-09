@@ -87,4 +87,4 @@ def add_new_record(email, addresses):
 	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'r') as f:
 		seen_email_data = json.loads(f.read())
 
-	add_entry(email, addresses, seen_email_data)
+	data_handling.add_entry(email, addresses, seen_email_data)

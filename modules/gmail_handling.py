@@ -1,6 +1,11 @@
 from email.mime.text import MIMEText
 import base64
 
+
+class MyGmailError(Exception):
+    pass
+
+
 def get_unread_email_ids(gmail_client):
     """
     return list of id of unread emails
@@ -64,13 +69,12 @@ def send_message(message, client):
     Returns:
     Sent Message.
     """
-    # try: TODO uncomment this function
-    #     message = (client.users().messages().send(userId='me', body=message).execute())
-    #     print('Message Id: %tests' % message['id'])
-    #     return message
-    # except errors.HttpError as error:
-    #     print('An error occurred: %tests' % error)
-    pass
+    try:
+        message = (client.users().messages().send(userId='me', body=message).execute())
+        return message
+    except:
+        raise MyGmailError("Something went wrong sending email")
+
 
 
 def send_email(gmail_client, host_email, recipient_email, email_subject, email_body,

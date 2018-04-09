@@ -3,6 +3,7 @@ from modules import utils
 class MyDataHandlingError(Exception):
 	pass
 
+
 def update_for_sent_voters(sender, voters_to_add, seen_email_data):
 	sender = utils.reformat_email_address(sender) # note that it was probably already reformatted by NewEmail
 	entry = seen_email_data.get(sender)
