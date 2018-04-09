@@ -83,8 +83,9 @@ def send_voters_handler(newemail, seen_email_data, unused_voters, gmail_client):
 	# add voters to newemail.sender'tests entry (and create entry if necessary)
 	# change/leave entry['active'] to 'y'
 	# delete voters
+	demo = newemail.use_demo_data
 	intro_message = config.BOT_MESSAGES['MESSAGE_WHEN_SENDING_VOTERS']
-	voters_to_add = data_handling.get_voters(unused_voters, config.NUMBER_OF_VOTERS_TO_SEND)
+	voters_to_add = data_handling.get_voters(unused_voters, config.NUMBER_OF_VOTERS_TO_SEND, demo)
 	pretty_voters = utils.prettify_voters(voters_to_add)
 	message = intro_message + "\n\n" + pretty_voters
 

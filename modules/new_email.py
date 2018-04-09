@@ -78,6 +78,10 @@ def find_key_phrase(text, key_phrase):
     return found
 
 
+def check_if_this_is_just_a_demo(text):
+    return ('testing-bot' in text[:15] or 'testing bot' in text[:15])
+
+
 class NewEmail:
 
     def __str__(self):
@@ -117,6 +121,7 @@ class NewEmail:
             self.asks_for_more = find_key_phrase(self.text, secret.ASK_FOR_MORE_KEY_PHRASE)
             self.from_seen = self.determine_if_seen(seen_email_data)
             self.from_active = self.is_from_active(seen_email_data)
+            self.use_demo_data = check_if_this_is_just_a_demo(self.text)
 
 
     def get_raw_header_val(self, val):

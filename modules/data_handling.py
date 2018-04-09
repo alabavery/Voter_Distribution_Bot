@@ -42,7 +42,10 @@ def add_entry(new_sender, voters_to_add, seen_email_data):
 	return seen_email_data
 
 
-def get_voters(unused_voters, num):
+def get_voters(unused_voters, num, demo=False):
+	if demo:
+		return ['fake voter name{0}; fake voter address{0}'.format(i) for i in range(num)]
+
 	if num > len(unused_voters):
 		raise MyDataHandlingError("\n\n\nHoly crap, we don't have enough voters left to send!\n\n\n")
 	return unused_voters[:num]
