@@ -13,9 +13,18 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
           'https://www.googleapis.com/auth/gmail.send',
           'https://www.googleapis.com/auth/gmail.modify']
 
-BOT_MESSAGES = dict()
-for bot_message_file in os.listdir('secrets/bot_messages'):
-    with open('secrets/bot_messages/{0}'.format(bot_message_file), 'r') as f:
-        BOT_MESSAGES[bot_message_file[:-4]] = f.read()
-
 NUMBER_OF_VOTERS_TO_SEND = 10
+
+
+
+def read_file(file_path):
+    with open(file_path) as f:
+        data = f.read()
+    return data
+
+BOT_MESSAGES = dict(
+    MESSAGE_FOR_ASKING_IF_PEOPLE_WANT_MORE=read_file('secrets/bot_messages/message_for_asking_if_people_want_more.txt'),
+    MESSAGE_WHEN_BOT_DOESNT_UNDERSTAND=read_file('secrets/bot_messages/message_when_bot_doesnt_understand.txt'),
+    MESSAGE_WHEN_SENDING_VOTERS=read_file('secrets/bot_messages/message_when_sending_voters.txt'),
+    MESSAGE_WHEN_SOMEONE_CANT_MAIL_THEIR_VOTERS=read_file('secrets/bot_messages/message_when_someone_cant_mail_their_voters.txt'),
+)
