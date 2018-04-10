@@ -104,7 +104,7 @@ def send_voters_handler(newemail, seen_email_data, unused_voters, gmail_client):
 	else:
 		print("Ok, I didn't do anything.")
 
-	#print("replied to {0} with voters".format(newemail.sender))
+	print("replied to {0} with voters".format(newemail.sender))
 	return seen_email_data, unused_voters
 
 
@@ -114,8 +114,8 @@ def inquire_about_more_handler(newemail, seen_email_data, unused_voters, gmail_c
 	# change entry['active'] to 'n'
 	message = config.BOT_MESSAGES['MESSAGE_FOR_ASKING_IF_PEOPLE_WANT_MORE']
 
-	# gmail_handling.send_email(gmail_client, secret.THE_EMAIL, newemail.sender, newemail.subject, message,
-	# 						  newemail.RFC_message_id, newemail.RFC_message_id, newemail.threadId)
+	gmail_handling.send_email(gmail_client, secret.THE_EMAIL, newemail.sender, newemail.subject, message,
+							  newemail.RFC_message_id, newemail.RFC_message_id, newemail.threadId)
 	seen_email_data = data_handling.mark_existing_entry_inactive(newemail.sender, seen_email_data)
 
 	print("would have replied to {0} with inquiry about more".format(newemail.sender))
@@ -127,8 +127,8 @@ def reminder_of_options_handler(newemail, seen_email_data, unused_voters, gmail_
 	# send to newemail.sender using gmail_handling
 	message = config.BOT_MESSAGES['MESSAGE_WHEN_BOT_DOESNT_UNDERSTAND']
 
-	# gmail_handling.send_email(gmail_client, secret.THE_EMAIL, newemail.sender, newemail.subject, message,
-	# 						  newemail.RFC_message_id, newemail.RFC_message_id, newemail.threadId)
+	gmail_handling.send_email(gmail_client, secret.THE_EMAIL, newemail.sender, newemail.subject, message,
+							  newemail.RFC_message_id, newemail.RFC_message_id, newemail.threadId)
 
 	print("would have replied to {0} with did not understand/reminder of options".format(newemail.sender))
 	return seen_email_data, unused_voters

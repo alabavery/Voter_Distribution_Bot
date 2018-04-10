@@ -63,10 +63,10 @@ if __name__ == '__main__':
 		cont = input("Go to next one?")
 		while cont != 'y':
 			cont = input("Go to next one?")
-    #
-	# # SAVE THE DATA
-	# file_io.write_json(seen_email_data, config.SEEN_EMAIL_DATA_FILE_PATH)
-	# file_io.write_json(unused_voters, config.UNUSED_VOTERS_FILE_PATH)
-	# # MARK AS READ
-	# print("Not using error harness for mark_as_read() b/c this is last line of file.")
-	# gmail_handling.mark_as_read(gmail_client, ids_to_mark_read)
+
+	# SAVE THE DATA
+	file_io.write_json(seen_email_data, config.SEEN_EMAIL_DATA_FILE_PATH)
+	file_io.write_json(unused_voters, config.UNUSED_VOTERS_FILE_PATH)
+	# MARK AS READ
+	print("Not using error harness for mark_as_read() b/c this is last line of file.")
+	gmail_handling.mark_as_read(gmail_client, ids_to_mark_read)

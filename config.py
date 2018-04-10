@@ -16,15 +16,15 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
 NUMBER_OF_VOTERS_TO_SEND = 10
 
 
-
 def read_file(file_path):
     with open(file_path) as f:
         data = f.read()
     return data
 
+base = read_file('secrets/bot_messages/disclaimer_prefix.txt') + '\n\n'
 BOT_MESSAGES = dict(
-    MESSAGE_FOR_ASKING_IF_PEOPLE_WANT_MORE=read_file('secrets/bot_messages/message_for_asking_if_people_want_more.txt'),
-    MESSAGE_WHEN_BOT_DOESNT_UNDERSTAND=read_file('secrets/bot_messages/message_when_bot_doesnt_understand.txt'),
-    MESSAGE_WHEN_SENDING_VOTERS=read_file('secrets/bot_messages/message_when_sending_voters.txt'),
-    MESSAGE_WHEN_SOMEONE_CANT_MAIL_THEIR_VOTERS=read_file('secrets/bot_messages/message_when_someone_cant_mail_their_voters.txt'),
+    MESSAGE_FOR_ASKING_IF_PEOPLE_WANT_MORE=base + read_file('secrets/bot_messages/message_for_asking_if_people_want_more.txt'),
+    MESSAGE_WHEN_BOT_DOESNT_UNDERSTAND=base + read_file('secrets/bot_messages/message_when_bot_doesnt_understand.txt'),
+    MESSAGE_WHEN_SENDING_VOTERS=base + read_file('secrets/bot_messages/message_when_sending_voters.txt'),
+    MESSAGE_WHEN_SOMEONE_CANT_MAIL_THEIR_VOTERS=base + read_file('secrets/bot_messages/message_when_someone_cant_mail_their_voters.txt'),
 )
