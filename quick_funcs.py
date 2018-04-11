@@ -48,6 +48,7 @@ def run_it(email, num=10, existing=True):
 
 	if existing:
 		add_to_existing_record(email, adds)
+
 	else:
 		add_new_record(email, adds)
 
@@ -79,7 +80,12 @@ def add_to_existing_record(email, addresses):
 	email = utils.reformat_email_address(email)
 	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'r') as f:
 		seen_email_data = json.loads(f.read())
-	data_handling.update_for_sent_voters(email, addresses, seen_email_data)
+
+	seen_email_data = data_handling.update_for_sent_voters(email, addresses, seen_email_data)
+	seen_email_data = data_handling.mark_existing_entry_active(email, seen_email_data)
+
+	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'w') as f:
+		f.write(json.dumps(seen_email_data))
 
 
 def add_new_record(email, addresses):
@@ -87,4 +93,21 @@ def add_new_record(email, addresses):
 	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'r') as f:
 		seen_email_data = json.loads(f.read())
 
-	data_handling.add_entry(email, addresses, seen_email_data)
+	seen_email_data = data_handling.add_entry(email, addresses, seen_email_data)
+	seen_email_data = data_handling.mark_existing_entry_active(email, seen_email_data)
+
+	with open(config.SEEN_EMAIL_DATA_FILE_PATH, 'w') as f:
+		f.write(json.dumps(seen_email_data))
+
+
+
+def unnest_list(potentially_nested_list):
+	new_list = []
+	for item in potentially_nested_list:
+		if type(item) == list:
+			unnested = unnest_list(item)
+			new_list.extend(unnested)
+		else:
+			assert type(item) == str
+			new_list.append(item)
+	return new_list

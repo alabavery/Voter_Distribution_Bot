@@ -14,7 +14,7 @@ gmail_client = gmail_client.get_gmail_client(
 
 
 if __name__ == '__main__':
-	# seen_email_data is of format {email: [voter, voter,..], email2: [..]}
+
 	seen_email_data = file_io.read_json(config.SEEN_EMAIL_DATA_FILE_PATH)
 	# unused voters is of format ...
 	unused_voters = file_io.read_json(config.UNUSED_VOTERS_FILE_PATH)

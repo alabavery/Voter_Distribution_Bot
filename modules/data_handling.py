@@ -1,4 +1,5 @@
-from modules import utils
+from modules import utils, file_io
+import config
 
 class MyDataHandlingError(Exception):
 	pass
@@ -48,6 +49,11 @@ def get_voters(unused_voters, num, demo=False):
 
 	if num > len(unused_voters):
 		raise MyDataHandlingError("\n\n\nHoly crap, we don't have enough voters left to send!\n\n\n")
+
+	will_send = unused_voters[:num]
+	for voter in will_send:
+		assert check_if_already_sent(voter) == False
+
 	return unused_voters[:num]
 
 
@@ -56,3 +62,11 @@ def delete_voters(unused_voters, voters_to_delete):
 	updated_unused_voters = [voter for voter in unused_voters if voter not in voters_to_delete]
 	assert before - len(voters_to_delete) == len(updated_unused_voters)
 	return updated_unused_voters
+
+
+def check_if_already_sent(voter):
+	seen_email_data = file_io.read_json(config.SEEN_EMAIL_DATA_FILE_PATH)
+	for entry in seen_email_data:
+		if voter in entry['voters']:
+			return True
+	return False

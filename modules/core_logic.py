@@ -98,7 +98,10 @@ def send_voters_handler(newemail, seen_email_data, unused_voters, gmail_client):
 		gmail_handling.send_email(gmail_client, secret.THE_EMAIL, newemail.sender, newemail.subject, message,
 								  newemail.RFC_message_id, newemail.RFC_message_id, newemail.threadId)
 
+		# update_for_sent_voters will add voters to an existing entry if it exists and will create an entry and
+		# add voters to that if it doesn't exist.
 		seen_email_data = data_handling.update_for_sent_voters(newemail.sender, voters_to_add, seen_email_data)
+		# Now the entry will exist either way thanks to the function above.
 		seen_email_data = data_handling.mark_existing_entry_active(newemail.sender, seen_email_data)
 		unused_voters = data_handling.delete_voters(unused_voters, voters_to_add)
 	else:
