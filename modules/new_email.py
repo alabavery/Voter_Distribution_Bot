@@ -79,7 +79,10 @@ def find_key_phrase(text, key_phrase):
 
 
 def check_if_this_is_just_a_demo(text):
-    return ('testing-bot' in text[:15] or 'testing bot' in text[:15])
+    for thing in ['testing-bot', 'testing bot', 'test-bot', 'test bot']:
+        if thing in text[:15].lower():
+            return True
+    return False
 
 
 class NewEmail:

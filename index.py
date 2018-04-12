@@ -36,29 +36,31 @@ if __name__ == '__main__':
 			seen_email_data, unused_voters, ids_to_mark_read, core_logic.decide_what_to_do_with_email, newemail
 		)
 
+		print("Going to use handler '{0}' on email from sender {1}".format(handler, newemail.sender))
+		have_permission = input("Do I have your permission? (Y/n)") in ['y', 'Y']
 
-		# USE HANDLER
-		if handler != None:
-			seen_email_data, unused_voters = error_harness(
-				seen_email_data,
-				unused_voters,
-				ids_to_mark_read,
-				handler,
-				newemail, seen_email_data, unused_voters, gmail_client # the params used by all handlers
-			)
-			# LOG USE OF HANDLER
-			my_logging.log(handler, is_expected, newemail)
+		if have_permission:
+			# USE HANDLER
+			if handler != None:
+				seen_email_data, unused_voters = error_harness(
+					seen_email_data,
+					unused_voters,
+					ids_to_mark_read,
+					handler,
+					newemail, seen_email_data, unused_voters, gmail_client # the params used by all handlers
+				)
+				# LOG USE OF HANDLER
+				my_logging.log(handler, is_expected, newemail)
 
+			else:
+				# ALSO LOG IF WE IGNORED AN EMAIL
+				my_logging.log(handler, is_expected, newemail)
+
+			# OK TO QUEUE UP TO MARK AS READ NOW
+			ids_to_mark_read.append(email_id)
+			print("Ok, I did that.")
 		else:
-			# ALSO LOG IF WE IGNORED AN EMAIL
-			my_logging.log(handler, is_expected, newemail)
-
-		# OK TO QUEUE UP TO MARK AS READ NOW
-		ids_to_mark_read.append(email_id)
-
-		print("\n\n")
-		print(newemail)
-		print("\nUsing handler {0} (but not actually sending email)".format(handler))
+			print("Ok, I didn't do anything.")
 
 		cont = input("Go to next one?")
 		while cont != 'y':

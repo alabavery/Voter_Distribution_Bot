@@ -89,23 +89,15 @@ def send_voters_handler(newemail, seen_email_data, unused_voters, gmail_client):
 	pretty_voters = utils.prettify_voters(voters_to_add)
 	message = intro_message + "\n\n" + pretty_voters
 
-	get_permission = input("Do I have your permission to send the following addresses to {0} and"
-						   "to update seen_email_data and unused accordingly? (y/n)\nAddresses:\n{1}".format(
-		newemail.sender, pretty_voters
-	))
+	gmail_handling.send_email(gmail_client, secret.THE_EMAIL, newemail.sender, newemail.subject, message,
+							  newemail.RFC_message_id, newemail.RFC_message_id, newemail.threadId)
 
-	if get_permission == 'y':
-		gmail_handling.send_email(gmail_client, secret.THE_EMAIL, newemail.sender, newemail.subject, message,
-								  newemail.RFC_message_id, newemail.RFC_message_id, newemail.threadId)
-
-		# update_for_sent_voters will add voters to an existing entry if it exists and will create an entry and
-		# add voters to that if it doesn't exist.
-		seen_email_data = data_handling.update_for_sent_voters(newemail.sender, voters_to_add, seen_email_data)
-		# Now the entry will exist either way thanks to the function above.
-		seen_email_data = data_handling.mark_existing_entry_active(newemail.sender, seen_email_data)
-		unused_voters = data_handling.delete_voters(unused_voters, voters_to_add)
-	else:
-		print("Ok, I didn't do anything.")
+	# update_for_sent_voters will add voters to an existing entry if it exists and will create an entry and
+	# add voters to that if it doesn't exist.
+	seen_email_data = data_handling.update_for_sent_voters(newemail.sender, voters_to_add, seen_email_data)
+	# Now the entry will exist either way thanks to the function above.
+	seen_email_data = data_handling.mark_existing_entry_active(newemail.sender, seen_email_data)
+	unused_voters = data_handling.delete_voters(unused_voters, voters_to_add)
 
 	print("replied to {0} with voters".format(newemail.sender))
 	return seen_email_data, unused_voters
