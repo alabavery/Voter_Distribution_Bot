@@ -12,7 +12,8 @@ def decide_what_to_do_with_email(newemail):
 	if newemail.should_ignore:
 		handler = None
 		is_expected = True
-		return handler, is_expected
+		rationale = 'should_ignore'
+		return handler, is_expected, rationale
 
 	else:
 		# FIRST TAKE CARE OF ALL THE SCENARIOS WITH CONDITIONS THAT WILL REQUIRE MANUAL REVIEW TO
@@ -21,24 +22,28 @@ def decide_what_to_do_with_email(newemail):
 		# we will have an autmoated response to... those are further down
 		unexpected_scenarios = [
 			# shouldn't get a surrender and an attach in one
-			(newemail.from_active, newemail.surrender, newemail.attach),
-			# shouldn't get an attach from someone who is inactive
-			(not newemail.from_active, newemail.attach),
+			dict(from_active=newemail.from_active, surrender=newemail.surrender, attach=newemail.attach),
+			# shouldn't get an attach from someone who is inactive or unseen
+			dict(from_inactive_or_unseen=not newemail.from_active, attach=newemail.attach),
 			# shouldn't get a surrender from an inactive/unseen
-			(not newemail.from_active, newemail.surrender),
-			# shouldn't get any of those special things on an unseen
-			(not newemail.from_seen, newemail.attach or newemail.surrender)
+			dict(from_inactive_or_unseen=not newemail.from_active, surrender=newemail.surrender),
+			# shouldn't get either of the special things below on an unseen
+			dict(not_from_seen=not newemail.from_seen, attach=newemail.attach),
+			dict(not_from_seen=not newemail.from_seen, surrender=newemail.surrender)
 		]
+
 		for scenario_conditions in unexpected_scenarios:
-			if all(scenario_conditions):
+			if all(list(scenario_conditions.values())): # all the conditions are True
 				handler = None
 				is_expected = False
-				return handler, is_expected
+				rationale = ' and '.join(list(scenario_conditions.keys()))
+				return handler, is_expected, rationale
 
 		if newemail.from_seen:
 			return decide_what_to_do_with_seen_emailer_email(newemail)
 		else:
-			return send_voters_handler, True # already eliminated all scenarios pertaining to unseen except valid requests...
+			# already eliminated all scenarios pertaining to unseen except valid requests...
+			return send_voters_handler, True, 'unseen and nothing wrong'
 
 
 def decide_what_to_do_with_seen_emailer_email(newemail):
@@ -51,26 +56,32 @@ def decide_what_to_do_with_seen_emailer_email(newemail):
 			is_expected = True
 			if newemail.asks_for_more:
 				handler = send_voters_handler
+				rationale = 'from active AND attach AND asks for more'
 			else:
 				handler = inquire_about_more_handler
+				rationale = 'from active AND attach AND not asks for more'
 		else:
 			if newemail.surrender:
 				is_expected = True
 				handler = surrender_handler
+				rationale = 'from active and no attach and asks for more'
 			else:
 				is_expected = False
 				handler = reminder_of_options_handler
+				rationale = 'from active and no attach and no surrender'
 	# EMAILERS WE HAVE PREVIOUSLY SEEN but WHO ARE 'INACTIVE'
 	# already covered most of these scenarios in 'unexpected_scenarios'
 	else:
 		if newemail.asks_for_more:
 			is_expected = True
 			handler = send_voters_handler
+			rationale = 'from seen & inactive and no attach asks for more'
 		else:
 			is_expected = False
 			handler = reminder_of_options_handler
+			rationale = 'from seen & inactive and no attach doesnt ask for more'
 
-	return handler, is_expected
+	return handler, is_expected, rationale
 
 
 # EACH OF THESE FUNCTIONS REPLIES APPROPRIATELY (if applicable) AND ADJUSTS SEEN_EMAIL_DATA 

@@ -10,15 +10,15 @@ def add_to_file(file_path, additional_content):
         f.write(file_content + "\n\n\n" + additional_content)
 
 
-def log(handler_used, is_expected, newemail):
+def log(handler_used, is_expected, rationale, newemail):
     if is_expected:
         if handler_used != None:
             log_file_path = config.ROUTINE_ACTION_LOG_FILE_PATH
-            message_intro = "Used'{0}' on new email".format(handler_used)
+            message_intro = "Used'{0}' on new email because {1}".format(handler_used, rationale)
         else:
             assert newemail.should_ignore == True
             log_file_path = config.IGNORE_LOG_FILE_PATH
-            message_intro = "Ignored new email"
+            message_intro = "Ignored new email because {0}".format(rationale)
     else:
         log_file_path = config.ABNORMAL_ACTION_LOG_FILE_PATH
         message_intro = "Used  '{0}' on new email".format(handler_used)

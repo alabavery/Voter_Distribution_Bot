@@ -32,11 +32,11 @@ if __name__ == '__main__':
 								 raw_email_datum, seen_email_data)
 
 		# DECIDE WHAT TO DO NAD GET APPROPRIATE HANDLER BASED ON ATTRIBUTES OF THE NEWLY-CREATED OBJECT
-		handler, is_expected = error_harness(
+		handler, is_expected, rationale = error_harness(
 			seen_email_data, unused_voters, ids_to_mark_read, core_logic.decide_what_to_do_with_email, newemail
 		)
 
-		print("Going to use handler '{0}' on email from sender {1}".format(handler, newemail.sender))
+		print("Going to use handler '{0}' on email from sender {1} because '{2}'".format(handler, newemail.sender, rationale))
 		have_permission = input("Do I have your permission? (Y/n)") in ['y', 'Y']
 
 		if have_permission:
@@ -50,11 +50,11 @@ if __name__ == '__main__':
 					newemail, seen_email_data, unused_voters, gmail_client # the params used by all handlers
 				)
 				# LOG USE OF HANDLER
-				my_logging.log(handler, is_expected, newemail)
+				my_logging.log(handler, is_expected, rationale, newemail)
 
 			else:
 				# ALSO LOG IF WE IGNORED AN EMAIL
-				my_logging.log(handler, is_expected, newemail)
+				my_logging.log(handler, is_expected, rationale, newemail)
 
 			# OK TO QUEUE UP TO MARK AS READ NOW
 			ids_to_mark_read.append(email_id)
