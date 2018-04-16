@@ -20,7 +20,8 @@ def extract_part_of_snippet(email_id, sender, raw):
     """
     snippet = raw.get('snippet')
     if not snippet:
-        raise EmailValueNotPresent('No snippet on email {0} from sender {1}'.format(email_id, sender))
+        print('No snippet on email {0} from sender {1}'.format(email_id, sender))
+        return ""
 
     # example 'On Apr 5, 2018, at 10:51 AM'
     pattern_with_no_weekday = re.compile("On [a-zA-Z]{3}\s\d{1,2},\s\d{4},\sat")
