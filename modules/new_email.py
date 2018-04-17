@@ -152,6 +152,6 @@ class NewEmail:
 
     def is_from_active(self, seen_email_data):
         if seen_email_data.get(self.sender):
-            return seen_email_data[self.sender]['active']
+            return seen_email_data[self.sender]['active'] == 'y'
         else:
             return False

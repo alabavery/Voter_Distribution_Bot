@@ -66,7 +66,7 @@ def delete_voters(unused_voters, voters_to_delete):
 
 def check_if_already_sent(voter):
 	seen_email_data = file_io.read_json(config.SEEN_EMAIL_DATA_FILE_PATH)
-	for entry in seen_email_data:
+	for entry in seen_email_data.values():
 		if voter in entry['voters']:
 			return True
 	return False
