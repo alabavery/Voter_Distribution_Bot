@@ -3,6 +3,9 @@ secret.py
 *.json
 *.txt
 *.pyc
+*.csv
+*.xlsx
+*.log
 secrets/Bot_Messages
 .credentials
 Old

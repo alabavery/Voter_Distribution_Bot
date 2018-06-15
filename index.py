@@ -37,34 +37,26 @@ if __name__ == '__main__':
 		)
 
 		print("Going to use handler '{0}' on email from sender {1} because '{2}'".format(handler, newemail.sender, rationale))
-		have_permission = input("Do I have your permission? (Y/n)") in ['y', 'Y']
 
-		if have_permission:
-			# USE HANDLER
-			if handler != None:
-				seen_email_data, unused_voters = error_harness(
-					seen_email_data,
-					unused_voters,
-					ids_to_mark_read,
-					handler,
-					newemail, seen_email_data, unused_voters, gmail_client # the params used by all handlers
-				)
-				# LOG USE OF HANDLER
-				my_logging.log(handler, is_expected, rationale, newemail)
 
-			else:
-				# ALSO LOG IF WE IGNORED AN EMAIL
-				my_logging.log(handler, is_expected, rationale, newemail)
+		if handler != None:
+			seen_email_data, unused_voters = error_harness(
+				seen_email_data,
+				unused_voters,
+				ids_to_mark_read,
+				handler,
+				newemail, seen_email_data, unused_voters, gmail_client # the params used by all handlers
+			)
+			# LOG USE OF HANDLER
+			my_logging.log(handler, is_expected, rationale, newemail)
 
-			# OK TO QUEUE UP TO MARK AS READ NOW
-			ids_to_mark_read.append(email_id)
-			print("Ok, I did that.")
 		else:
-			print("Ok, I didn't do anything.")
+			# ALSO LOG IF WE IGNORED AN EMAIL
+			my_logging.log(handler, is_expected, rationale, newemail)
 
-		cont = input("Go to next one?")
-		while cont != 'y':
-			cont = input("Go to next one?")
+		# OK TO QUEUE UP TO MARK AS READ NOW
+		ids_to_mark_read.append(email_id)
+		print("Ok, I did that.")
 
 	# SAVE THE DATA
 	file_io.write_json(seen_email_data, config.SEEN_EMAIL_DATA_FILE_PATH)
