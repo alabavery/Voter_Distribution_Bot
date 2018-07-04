@@ -1,5 +1,3 @@
-import os
-
 CLIENT_SECRET_FILE_PATH = "secrets/client_secret.json"
 SEEN_EMAIL_DATA_FILE_PATH = "data/seen_email_data.json"
 UNUSED_VOTERS_FILE_PATH = "data/unused_voters.json"
@@ -28,3 +26,6 @@ BOT_MESSAGES = dict(
     MESSAGE_WHEN_SENDING_VOTERS=base + read_file('secrets/bot_messages/message_when_sending_voters.txt'),
     MESSAGE_WHEN_SOMEONE_CANT_MAIL_THEIR_VOTERS=base + read_file('secrets/bot_messages/message_when_someone_cant_mail_their_voters.txt'),
 )
+
+# DON'T CHANGE THE ORDER OF THESE
+VOTER_DATA_FIELDS = ['name', 'street_address', 'apt_number', 'zip_code', 'city']
