@@ -6,6 +6,7 @@ secret.py
 *.csv
 *.xlsx
 *.log
+*.xml
 secrets/Bot_Messages
 .credentials
 Old
@@ -13,4 +14,3 @@ temp_file*
 temp*
 tempfile*
 secrets/
-.xml
