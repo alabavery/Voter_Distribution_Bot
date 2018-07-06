@@ -7,6 +7,7 @@ secret.py
 *.xlsx
 *.log
 *.xml
+.idea
 secrets/Bot_Messages
 .credentials
 Old
