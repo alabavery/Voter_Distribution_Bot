@@ -14,4 +14,6 @@ Old
 temp_file*
 temp*
 tempfile*
-secrets/
+secrets/bot_messages/
+secrets/client_secrets/
+secrets/credentials/
